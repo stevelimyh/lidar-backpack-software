@@ -1,5 +1,5 @@
 {
-    "name": "display_log",
+    "name": "display_dummy",
     "modules": [
       "viewers",
       "perception"
@@ -110,7 +110,7 @@
                 "renderer": "2d",
                 "channels": [
                   {
-                    "name": "display_log/depth/depth_viewer/Depth"
+                    "name": "display_dummy/depth/depth_viewer/Depth"
                   }
                 ]
               },
@@ -118,7 +118,7 @@
                 "renderer": "2d",
                 "channels": [
                   {
-                    "name": "display_log/color_l/color_viewer/Color"
+                    "name": "display_dummy/color_l/color_viewer/Color"
                   }
                 ]
               },
@@ -126,7 +126,7 @@
                 "renderer": "2d",
                 "channels": [
                   {
-                    "name": "display_log/color_r/color_viewer/Color"
+                    "name": "display_dummy/color_r/color_viewer/Color"
                   }
                 ]
               },
@@ -134,10 +134,10 @@
                 "renderer": "2d",
                 "channels": [
                   {
-                    "name": "display_log/flat/flatscan_viewer/beam_endpoints"
+                    "name": "display_dummy/flat/flatscan_viewer/beam_endpoints"
                   },
                   {
-                    "name": "display_log/flat/flatscan_viewer/beam_lines"
+                    "name": "display_dummy/flat/flatscan_viewer/beam_lines"
                   }
                 ]
               }

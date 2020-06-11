@@ -34,7 +34,7 @@ isaac_subgraph(
 )
 
 isaac_app(
-    name = "display_log",
+    name = "display_dummy",
     data = [
         "//packages/record_replay/apps:replay_subgraph",
     ],
