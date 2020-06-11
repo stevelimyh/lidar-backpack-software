@@ -1,0 +1,109 @@
+{
+    "name": "imu_test",
+    "modules": [
+      "imu",
+      "message_generators"
+    ],
+    "config": {
+        "record.interface": {
+            "input": {
+              "start_recording_automatically": false
+            }
+          },
+      "Imu1": {
+        "isaac.imu.imusim": {
+          "robot_name": "carter_1",
+          "imu_name": "imu_1",
+          "robot_T_imu": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "accel_bias": [
+            0.2,
+            0.3,
+            0.4
+          ],
+          "gyro_bias": [
+            0.01,
+            0.02,
+            0.02
+          ],
+          "accel_noise": [
+            0.01,
+            0.01,
+            0.01
+          ],
+          "gyro_noise": [
+            0.001,
+            0.001,
+            0.001
+          ]
+        },
+        "isaac.imu.imucorrector": {
+          "imu_calibration_file": "apps/samples/imu_sim/imu_calib.json"
+        }
+      },
+      "RigidBody": {
+        "rb_gen": {
+            "tick_period": "1s"
+        }
+    }
+    },
+    "graph": {
+      "nodes": [
+        {
+          "name": "Imu1",
+          "components": [
+            {
+              "name": "isaac.alice.MessageLedger",
+              "type": "isaac::alice::MessageLedger"
+            },
+            {
+              "name": "isaac.imu.imusim",
+              "type": "isaac::imu::ImuSim"
+            },
+            {
+              "name": "isaac.imu.imucorrector",
+              "type": "isaac::imu::ImuCorrector"
+            }
+          ]
+        },
+        {
+          "name": "RigidBody",
+          "components": [
+            {
+              "name": "isaac.alice.MessageLedger",
+              "type": "isaac::alice::MessageLedger"
+            },
+            {
+              "name": "rb_gen",
+              "type": "isaac::message_generators::RigidBody3GroupGenerator"
+            }
+          ]
+        },
+        {
+            "name": "record",
+            "subgraph": "packages/record_replay/apps/record.subgraph.json"
+        }
+      ],
+      "edges": [
+        {
+          "source": "RigidBody/rb_gen/bodies",
+          "target": "Imu1/isaac.imu.imusim/bodies"
+        },
+        {
+          "source": "Imu1/isaac.imu.imusim/ggwpawadsdasdasa",
+          "target": "Imu1/isaac.imu.imucorrector/raw"
+        },
+        {
+            "source": "Imu1/isaac.imu.imucorrector/corrected" ,
+            "target": "record.interface/input/imu"
+        }
+      ]
+    }
+  }

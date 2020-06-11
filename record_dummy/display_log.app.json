@@ -1,0 +1,159 @@
+{
+    "name": "display_log",
+    "modules": [
+      "viewers",
+      "perception"
+    ],
+    "graph": {
+      "nodes": [
+        {
+          "name": "depth",
+          "components": [
+            {
+              "name": "isaac.alice.MessageLedger",
+              "type": "isaac::alice::MessageLedger"
+            },
+            {
+              "name": "depth_viewer",
+              "type": "isaac::viewers::DepthCameraViewer"
+            }
+          ]
+        },
+        {
+          "name": "color_l",
+          "components": [
+            {
+              "name": "isaac.alice.MessageLedger",
+              "type": "isaac::alice::MessageLedger"
+            },
+            {
+              "name": "color_viewer",
+              "type": "isaac::viewers::ColorCameraViewer"
+            }
+          ]
+        },
+        {
+          "name": "color_r",
+          "components": [
+            {
+              "name": "isaac.alice.MessageLedger",
+              "type": "isaac::alice::MessageLedger"
+            },
+            {
+              "name": "color_viewer",
+              "type": "isaac::viewers::ColorCameraViewer"
+            }
+          ]
+        },
+        {
+            "name": "flat",
+            "components": [
+              {
+                "name": "isaac.alice.MessageLedger",
+                "type": "isaac::alice::MessageLedger"
+              },
+              {
+                "name": "flatscan_viewer",
+                "type": "isaac::viewers::FlatscanViewer"
+              }
+            ]
+        },
+        {
+          "name": "scan_flattener",
+          "components": [
+            {
+              "name": "message_ledger",
+              "type": "isaac::alice::MessageLedger"
+            },
+            {
+              "name": "scan_flat",
+              "type": "isaac::perception::RangeScanFlattening"
+            }
+          ]
+        },
+        {
+            "name": "replay",
+            "subgraph": "packages/record_replay/apps/replay.subgraph.json"
+        }
+      ],
+      "edges": [
+        {
+          "source": "replay.interface/output/scan",
+          "target": "scan_flattener/scan_flat/scan"
+        },
+        {
+          "source": "scan_flattener/scan_flat/flatscan",
+          "target": "flat/flatscan_viewer/flatscan"
+        },
+        {
+          "source": "replay.interface/output/depth",
+          "target": "depth/depth_viewer/depth_listener"
+        },
+        {
+          "source": "replay.interface/output/color_left",
+          "target": "color_l/color_viewer/color_listener"
+        },
+        {
+          "source": "replay.interface/output/color_right",
+          "target": "color_r/color_viewer/color_listener"
+        }
+
+      ]
+    },
+    "config": {
+      "websight": {
+        "WebsightServer": {
+          "port": 5000,
+          "ui_config": {
+            "windows": {
+              "Depth Generator": {
+                "renderer": "2d",
+                "channels": [
+                  {
+                    "name": "display_log/depth/depth_viewer/Depth"
+                  }
+                ]
+              },
+              "Color Generator (left)": {
+                "renderer": "2d",
+                "channels": [
+                  {
+                    "name": "display_log/color_l/color_viewer/Color"
+                  }
+                ]
+              },
+              "Color Generator (right)": {
+                "renderer": "2d",
+                "channels": [
+                  {
+                    "name": "display_log/color_r/color_viewer/Color"
+                  }
+                ]
+              },
+              "Scan Generator": {
+                "renderer": "2d",
+                "channels": [
+                  {
+                    "name": "display_log/flat/flatscan_viewer/beam_endpoints"
+                  },
+                  {
+                    "name": "display_log/flat/flatscan_viewer/beam_lines"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "depth": {
+        "depth_viewer": {
+          "max_visualization_depth": 20.0
+        }
+      },
+      "scan_flattener": {
+        "scan_flat": {
+          "pitch_fudge": 0.005
+        }
+      }
+    }
+  }
